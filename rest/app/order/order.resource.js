@@ -25,6 +25,12 @@ module.exports = class OrderResource {
 //POST
 	    server.post('/orders', function(req, res){
 	    	let service = new OrderService();
+	    	console.log('Inside Get Filtered Orders ');
+	    	service.getFilteredOrders(req, res);
+	    });	    
+//POST
+	    server.post('/orders/save', function(req, res){
+	    	let service = new OrderService();
 	    	console.log('Inside Save Orders ');
 	    	service.saveOrder(req, res);
 	    });

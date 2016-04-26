@@ -1,59 +1,39 @@
 import React from 'react';
-import CreateOrderStore from '../stores/CreateOrderStore';
-import CreateOrderActions from '../actions/CreateOrderActions';
+import OrderAppStore from '../stores/OrderAppStore';
+import OrderAppActions from '../actions/OrderAppActions';
+import OrderForm from './OrderForm';
 
 class CreateOrder extends React.Component {
   constructor(props) {
     super(props);
-    this.state = CreateOrderStore.getState();
-    this.onChange = this.onChange.bind(this);
+    this.state = OrderAppStore.getState();
+    this._handleSubmit = this._handleSubmit.bind(this);
+    this._onChange = this._onChange.bind(this);
   }
 
   componentDidMount() {
-    CreateOrderStore.listen(this.onChange);
-    this.refs.orderIdField.focus();
+    OrderAppStore.listen(this._onChange);
   }
 
   componentWillUnmount() {
-    CreateOrderStore.unlisten(this.onChange);
+    OrderAppStore.unlisten(this._onChange);
   }
 
-  onChange(state) {
+  _onChange(state) {
     this.setState(state);
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-    var orderId = this.state.orderId;
-    var orderName = this.state.orderName;
-    var billAmount = this.state.billAmount;
-
-    if (orderId && orderName && billAmount) {
-      CreateOrderActions.createOrder(orderId, orderName, billAmount);
+  _handleSubmit(event) {
+    if (this.state.order.orderId && this.state.order.orderName && this.state.order.billAmount) {
+      OrderAppActions.createOrder(this.state.order);
     }
+
   }
 
   render() {
     return (
       <div className='container'>
-          <form onSubmit={this.handleSubmit.bind(this)}>
-            <div>
-              <label>Order Id</label>
-              <input type='text' className='form-control' ref='orderIdField' value={this.state.orderId}
-                     onChange={CreateOrderActions.updateOrderId} autoFocus/>
-            </div>
-            <div>
-              <label>Order Name</label>
-              <input type='text' className='form-control' value={this.state.orderName}
-                     onChange={CreateOrderActions.updateOrderName} autoFocus/>
-            </div>
-            <div>
-              <label>Billing Amount</label>
-              <input type='text' className='form-control' value={this.state.billAmount}
-                     onChange={CreateOrderActions.updateBillAmount} autoFocus/>
-            </div>
-            <button type='submit' className='btn btn-primary'>Submit</button>
-          </form>
+         <OrderForm order={this.state.order} onSubmit={this._handleSubmit}/>
       </div>
     );
   }

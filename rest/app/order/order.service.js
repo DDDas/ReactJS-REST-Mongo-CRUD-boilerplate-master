@@ -15,8 +15,10 @@ module.exports = class OrderService {
 	              orderId: req.body.orderId,
 	              orderName: req.body.orderName,
 	              billAmount: req.body.billAmount,
-	              paid: true,
-	              random: [Math.random(), 0]
+	              orderType: req.body.orderType,
+	              paymentType: req.body.paymentType,
+	              deliveryType: req.body.deliveryType,
+	              paid: true
 	            });
 			newOrder.save(function(err) {
 	        if (err) return next(err);
@@ -27,6 +29,7 @@ module.exports = class OrderService {
 	getOrders(req, res){
 	    Order
         .find()
+        .select('orderId orderName billAmount orderType paymentType deliveryType') 
         .exec(function(err, orders) {
           if (err) return next(err);
           if(!orders){
@@ -48,6 +51,29 @@ module.exports = class OrderService {
 
 		    res.send(order);
 		  });
+	}
+
+	getFilteredOrders(req, res){
+		var conditions = {};
+		if(req.body.paymentType)
+		{
+			conditions["paymentType"] = req.body.paymentType;
+		}
+		if(req.body.orderType)
+		{
+			conditions["orderType"] = req.body.orderType;
+		}
+	    Order
+	    .find(conditions)
+	    .limit(100)
+	    .select('orderId orderName billAmount orderType paymentType deliveryType') 
+	    .exec(function(err, orders) {
+	      if (err) return next(err);
+          if(!orders){
+          	return res.status(404).send({ message: 'No Orders Found.' });
+          }
+          res.send(orders);
+	    });
 	}
 
 } 

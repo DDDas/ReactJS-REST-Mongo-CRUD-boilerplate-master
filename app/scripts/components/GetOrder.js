@@ -1,22 +1,22 @@
 import React from 'react';
 import {Link} from 'react-router';
-import GetOrderStore from '../stores/GetOrderStore';
-import GetOrderActions from '../actions/GetOrderActions';
+import OrderAppStore from '../stores/OrderAppStore';
+import OrderAppActions from '../actions/OrderAppActions';
 
 class GetOrder extends React.Component {
   constructor(props) {
     super(props);
-    this.state = GetOrderStore.getState();
+    this.state = OrderAppStore.getState();
     this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
-    GetOrderStore.listen(this.onChange);
-    GetOrderActions.getOrderById(this.props.params.id);
+    OrderAppStore.listen(this.onChange);
+    OrderAppActions.getOrderById(this.props.params.id);
   }
 
   componentWillUnmount() {
-    GetOrderStore.unlisten(this.onChange);
+    OrderAppStore.unlisten(this.onChange);
   }
 
   onChange(state) {

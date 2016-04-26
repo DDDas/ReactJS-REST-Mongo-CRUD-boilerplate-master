@@ -1,22 +1,22 @@
 import React from 'react';
 import {Link} from 'react-router';
-import OrderListStore from '../stores/OrderListStore';
-import OrderListActions from '../actions/OrderListActions';
+import OrderAppStore from '../stores/OrderAppStore';
+import OrderAppActions from '../actions/OrderAppActions';
 
 class OrderList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = OrderListStore.getState();
+    this.state = OrderAppStore.getState();
     this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
-    OrderListStore.listen(this.onChange);
-    OrderListActions.getOrders();
+    OrderAppStore.listen(this.onChange);
+    OrderAppActions.getOrders();
   }
 
   componentWillUnmount() {
-    OrderListStore.unlisten(this.onChange);
+    OrderAppStore.unlisten(this.onChange);
   }
 
   onChange(state) {
